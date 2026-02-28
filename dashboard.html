@@ -1,68 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>VidhyaGuide Career Analyzer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            text-align: center;
-        }
+<meta charset="UTF-8">
+<title>VidhyaGuide Smart Analyzer</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        color: #333;
+        text-align: center;
+    }
 
-        h1 {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            margin: 0;
-        }
+    h1 {
+        background: linear-gradient(90deg,#6a11cb,#2575fc);
+        color: white;
+        padding: 25px 0;
+        margin: 0;
+        font-size: 2.2em;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 2px #00000050;
+    }
 
-        .container {
-            margin: 30px auto;
-            width: 85%;
-        }
+    .container {
+        max-width: 900px;
+        margin: 30px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        padding: 30px;
+    }
 
-        textarea {
-            width: 90%;
-            height: 140px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 15px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
+    textarea {
+        width: 90%;
+        height: 140px;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 2px solid #3498db;
+        outline: none;
+        transition: all 0.3s ease;
+    }
 
-        button {
-            padding: 12px 25px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: none;
-            background: #3498db;
-            color: white;
-            cursor: pointer;
-        }
+    textarea:focus {
+        border-color: #6a11cb;
+        box-shadow: 0 0 10px rgba(106,17,203,0.3);
+    }
 
-        button:hover {
-            background: #2980b9;
-        }
+    button {
+        padding: 14px 30px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        margin: 10px;
+        font-weight: bold;
+        color: white;
+        transition: 0.3s;
+    }
 
-        #result {
-            background: white;
-            margin: 30px auto;
-            padding: 20px;
-            width: 90%;
-            border-radius: 10px;
-            text-align: left;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-            white-space: pre-line;
-        }
+    .analyze-btn { background: #6a11cb; }
+    .analyze-btn:hover { background: #2575fc; }
 
-        .score {
-            font-size: 22px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-    </style>
+    .career-btn { background: #ff416c; }
+    .career-btn:hover { background: #ff4b2b; }
+
+    #result {
+        margin-top: 25px;
+        text-align: left;
+        background: #f7f9fc;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        white-space: pre-line;
+        font-size: 16px;
+        color: #2c3e50;
+    }
+
+    .score {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2575fc;
+    }
+
+    .highlight {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    .improvement {
+        color: #27ae60;
+        font-weight: bold;
+    }
+
+    .career-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #ff416c;
+        margin-top: 10px;
+    }
+
+    .roadmap {
+        background: #e3f2fd;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 10px 0;
+    }
+
+    /* Add some fun hover effect */
+    #result:hover {
+        transform: scale(1.02);
+        transition: 0.3s;
+    }
+</style>
 </head>
 
 <body>
@@ -74,21 +126,19 @@
     <h2>Paste Your Resume</h2>
     <textarea id="resumeInput" placeholder="Paste your full resume here..."></textarea>
     <br>
-    <button onclick="analyzeResume()">Analyze Resume</button>
+    <button class="analyze-btn" onclick="analyzeResume()">Analyze Resume</button>
 
     <h2>Enter Your Skills & Interests</h2>
     <textarea id="skillsInput" placeholder="Example: python, data analysis, leadership"></textarea>
     <br>
-    <button onclick="generateCareer()">Get Career Plan</button>
+    <button class="career-btn" onclick="generateCareer()">Get Career Plan</button>
 
     <div id="result"></div>
 
 </div>
 
 <script>
-
 // -------------------- RESUME ANALYZER --------------------
-
 function analyzeResume() {
 
     const text = document.getElementById("resumeInput").value.toLowerCase();
@@ -104,20 +154,11 @@ function analyzeResume() {
     let improvements = [];
     let wording = [];
 
-    if (text.includes("project")) score += 10;
-    else weaknesses.push("No projects mentioned.");
-
-    if (text.includes("intern")) score += 10;
-    else weaknesses.push("No internship experience found.");
-
-    if (text.includes("skill")) score += 10;
-    else weaknesses.push("Skills section missing.");
-
-    if (text.includes("achievement")) score += 10;
-    else weaknesses.push("No achievements highlighted.");
-
-    if (text.length > 400) score += 10;
-    else weaknesses.push("Resume content too short.");
+    if (text.includes("project")) score += 10; else weaknesses.push("No projects mentioned.");
+    if (text.includes("intern")) score += 10; else weaknesses.push("No internship experience found.");
+    if (text.includes("skill")) score += 10; else weaknesses.push("Skills section missing.");
+    if (text.includes("achievement")) score += 10; else weaknesses.push("No achievements highlighted.");
+    if (text.length > 400) score += 10; else weaknesses.push("Resume content too short.");
 
     if (score > 100) score = 100;
 
@@ -134,20 +175,19 @@ function analyzeResume() {
 RESUME SCORE: ${score}/100
 
 Weak Areas:
-- ${weaknesses.join("\n- ")}
+${weaknesses.map(w => "- " + w).join("\n")}
 
 Suggested Improvements:
-- ${improvements.join("\n- ")}
+${improvements.map(i => "- " + i).join("\n")}
 
 Better Wording Suggestions:
-- ${wording.join("\n- ")}
+${wording.map(w => "- " + w).join("\n")}
 `;
 
-    resultBox.innerText = result;
+    resultBox.innerHTML = result.replace(/RESUME SCORE:/g, `<span class="score">RESUME SCORE:</span>`).replace(/Weak Areas:/g, `<span class="highlight">Weak Areas:</span>`).replace(/Suggested Improvements:/g, `<span class="improvement">Suggested Improvements:</span>`).replace(/Better Wording Suggestions:/g, `<span class="highlight">Better Wording Suggestions:</span>`);
 }
 
 // -------------------- CAREER ANALYZER --------------------
-
 function generateCareer() {
 
     const input = document.getElementById("skillsInput").value.toLowerCase();
@@ -160,7 +200,7 @@ function generateCareer() {
 
     let result = "";
 
-    if (input.includes("python") || input.includes("java") || input.includes("coding")) {
+    if (input.includes("python") || input.includes("java") || input.includes("coding") || input.includes("javascript")) {
 
         result = `
 Career Path: Software Developer
@@ -177,8 +217,7 @@ Roadmap:
 Salary Range: 4–15 LPA
         `;
 
-    }
-    else if (input.includes("data") || input.includes("sql") || input.includes("analysis")) {
+    } else if (input.includes("data") || input.includes("sql") || input.includes("analysis") || input.includes("excel")) {
 
         result = `
 Career Path: Data Analyst
@@ -195,8 +234,7 @@ Roadmap:
 Salary Range: 5–18 LPA
         `;
 
-    }
-    else if (input.includes("design") || input.includes("ui") || input.includes("ux")) {
+    } else if (input.includes("design") || input.includes("ui") || input.includes("ux") || input.includes("figma")) {
 
         result = `
 Career Path: UI/UX Designer
@@ -213,8 +251,7 @@ Roadmap:
 Salary Range: 4–12 LPA
         `;
 
-    }
-    else {
+    } else {
 
         result = `
 Career Path: General Career Exploration
@@ -225,10 +262,9 @@ and building technical foundations.
         `;
     }
 
-    resultBox.innerText = result;
+    resultBox.innerHTML = result.replace(/Career Path:/g, `<span class="career-title">Career Path:</span>`).replace(/Roadmap:/g, `<span class="roadmap">Roadmap:</span>`);
 }
 
 </script>
-
 </body>
 </html>
