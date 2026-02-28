@@ -1,37 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Vidya Guide</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>VidhyaGuide Smart Analyzer</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        color: #333;
+        text-align: center;
+    }
+
+    h1 {
+        background: linear-gradient(90deg,#6a11cb,#2575fc);
+        color: white;
+        padding: 25px 0;
+        margin: 0;
+        font-size: 2.2em;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 2px #00000050;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 30px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        padding: 30px;
+    }
+
+    textarea {
+        width: 90%;
+        height: 140px;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 2px solid #3498db;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    textarea:focus {
+        border-color: #6a11cb;
+        box-shadow: 0 0 10px rgba(106,17,203,0.3);
+    }
+
+    button {
+        padding: 14px 30px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        margin: 10px;
+        font-weight: bold;
+        color: white;
+        transition: 0.3s;
+    }
+
+    .analyze-btn { background: #6a11cb; }
+    .analyze-btn:hover { background: #2575fc; }
+
+    .career-btn { background: #ff416c; }
+    .career-btn:hover { background: #ff4b2b; }
+
+    #result {
+        margin-top: 25px;
+        text-align: left;
+        background: #f7f9fc;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        white-space: pre-line;
+        font-size: 16px;
+        color: #2c3e50;
+    }
+
+    .score {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2575fc;
+    }
+
+    .highlight {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    .improvement {
+        color: #27ae60;
+        font-weight: bold;
+    }
+
+    .career-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #ff416c;
+        margin-top: 10px;
+    }
+
+    .roadmap {
+        background: #e3f2fd;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 10px 0;
+    }
+
+    /* Add some fun hover effect */
+    #result:hover {
+        transform: scale(1.02);
+        transition: 0.3s;
+    }
+</style>
 </head>
 
 <body>
 
-<header>
-  <h1>🎓 Vidya Guide</h1>
-  <p>Your Smart Career Assistant</p>
-</header>
+<h1>VidhyaGuide Smart Resume & Career Analyzer</h1>
 
-<section class="upload">
-  <h2>Upload Resume</h2>
-  <input type="file" id="resumeInput" accept=".txt,.pdf,.doc,.docx">
-  <textarea id="skillsInput" placeholder="Enter your skills (comma separated)"></textarea>
-  <button onclick="analyzeResume()">Analyze Resume</button>
-</section>
+<div class="container">
 
-<section id="matchedCompanies"></section>
+    <h2>Paste Your Resume</h2>
+    <textarea id="resumeInput" placeholder="Paste your full resume here..."></textarea>
+    <br>
+    <button class="analyze-btn" onclick="analyzeResume()">Analyze Resume</button>
 
-<section id="companyChoice" style="display:none;">
-  <h2>Select Companies You Want</h2>
-  <div id="companyCheckboxes"></div>
-  <button onclick="analyzeSelected()">Analyze Selected Companies</button>
-</section>
+    <h2>Enter Your Skills & Interests</h2>
+    <textarea id="skillsInput" placeholder="Example: python, data analysis, leadership"></textarea>
+    <br>
+    <button class="career-btn" onclick="generateCareer()">Get Career Plan</button>
 
-<section id="results"></section>
+    <div id="result"></div>
 
-<script src="companies.js"></script>
-<script src="script.js"></script>
+</div>
 
+<script>
+// -------------------- RESUME ANALYZER --------------------
+function analyzeResume() {
+
+    const text = document.getElementById("resumeInput").value.toLowerCase();
+    const resultBox = document.getElementById("result");
+
+    if (!text.trim()) {
+        resultBox.innerText = "Please paste your resume first.";
+        return;
+    }
+
+    let score = 50;
+    let weaknesses = [];
+    let improvements = [];
+    let wording = [];
+
+    if (text.includes("project")) score += 10; else weaknesses.push("No projects mentioned.");
+    if (text.includes("intern")) score += 10; else weaknesses.push("No internship experience found.");
+    if (text.includes("skill")) score += 10; else weaknesses.push("Skills section missing.");
+    if (text.includes("achievement")) score += 10; else weaknesses.push("No achievements highlighted.");
+    if (text.length > 400) score += 10; else weaknesses.push("Resume content too short.");
+
+    if (score > 100) score = 100;
+
+    improvements.push("Add measurable achievements (e.g., Increased sales by 20%).");
+    improvements.push("Include more technical skills.");
+    improvements.push("Add strong action verbs.");
+    improvements.push("Mention certifications if available.");
+
+    wording.push("Replace 'worked on' with 'developed and implemented'.");
+    wording.push("Replace 'responsible for' with 'led and managed'.");
+    wording.push("Use numbers to show impact.");
+
+    let result = `
+RESUME SCORE: ${score}/100
+
+Weak Areas:
+${weaknesses.map(w => "- " + w).join("\n")}
+
+Suggested Improvements:
+${improvements.map(i => "- " + i).join("\n")}
+
+Better Wording Suggestions:
+${wording.map(w => "- " + w).join("\n")}
+`;
+
+    resultBox.innerHTML = result.replace(/RESUME SCORE:/g, `<span class="score">RESUME SCORE:</span>`).replace(/Weak Areas:/g, `<span class="highlight">Weak Areas:</span>`).replace(/Suggested Improvements:/g, `<span class="improvement">Suggested Improvements:</span>`).replace(/Better Wording Suggestions:/g, `<span class="highlight">Better Wording Suggestions:</span>`);
+}
+
+// -------------------- CAREER ANALYZER --------------------
+function generateCareer() {
+
+    const input = document.getElementById("skillsInput").value.toLowerCase();
+    const resultBox = document.getElementById("result");
+
+    if (!input.trim()) {
+        resultBox.innerText = "Please enter your skills first.";
+        return;
+    }
+
+    let result = "";
+
+    if (input.includes("python") || input.includes("java") || input.includes("coding") || input.includes("javascript")) {
+
+        result = `
+Career Path: Software Developer
+
+Why this fits you:
+Strong technical thinking and coding interest.
+
+Roadmap:
+1. Master one programming language
+2. Learn Data Structures
+3. Build real-world projects
+4. Apply for internships
+
+Salary Range: 4–15 LPA
+        `;
+
+    } else if (input.includes("data") || input.includes("sql") || input.includes("analysis") || input.includes("excel")) {
+
+        result = `
+Career Path: Data Analyst
+
+Why this fits you:
+Strong analytical and logical skills.
+
+Roadmap:
+1. Learn SQL & Excel
+2. Python for Data
+3. Power BI / Tableau
+4. Build portfolio dashboards
+
+Salary Range: 5–18 LPA
+        `;
+
+    } else if (input.includes("design") || input.includes("ui") || input.includes("ux") || input.includes("figma")) {
+
+        result = `
+Career Path: UI/UX Designer
+
+Why this fits you:
+Creative and visual thinking ability.
+
+Roadmap:
+1. Learn Figma
+2. Study UX principles
+3. Build portfolio
+4. Freelance projects
+
+Salary Range: 4–12 LPA
+        `;
+
+    } else {
+
+        result = `
+Career Path: General Career Exploration
+
+We recommend exploring internships,
+improving communication skills,
+and building technical foundations.
+        `;
+    }
+
+    resultBox.innerHTML = result.replace(/Career Path:/g, `<span class="career-title">Career Path:</span>`).replace(/Roadmap:/g, `<span class="roadmap">Roadmap:</span>`);
+}
+
+</script>
 </body>
 </html>
