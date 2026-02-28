@@ -1,1 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VidyaGuide Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<div class="top-bar">
+    <h2>VidyaGuide Dashboard</h2>
+    <button onclick="toggleMode()">🌙</button>
+</div>
+
+<div class="section">
+
+    <h3>📄 Resume Analyzer</h3>
+    <textarea id="resumeText" placeholder="Paste your resume here"></textarea>
+    <button onclick="analyzeResume()">Analyze Resume</button>
+
+    <div id="resumeOutput"></div>
+
+</div>
+
+<div class="section">
+
+    <h3>🎯 Career Recommendation</h3>
+    <input type="text" id="skills" placeholder="Your skills">
+    <input type="text" id="interest" placeholder="Your interest">
+    <button onclick="getCareerAdvice()">Get Career Plan</button>
+
+    <div id="careerOutput"></div>
+
+</div>
+
+<div class="section">
+
+    <h3>📊 Skill Gap Analyzer</h3>
+    <input type="text" id="currentSkills" placeholder="Current skills">
+    <input type="text" id="targetRole" placeholder="Target role">
+    <button onclick="analyzeSkillGap()">Check Skill Gap</button>
+
+    <div id="skillOutput"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
