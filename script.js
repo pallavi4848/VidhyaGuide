@@ -34,7 +34,7 @@ async function getCareerAdvice() {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer YOUR_OPENAI_API_KEY"
+            "Authorization": "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"
         },
         body: JSON.stringify({
             model: "gpt-4o-mini",
